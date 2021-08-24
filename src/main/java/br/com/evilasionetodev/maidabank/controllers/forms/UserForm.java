@@ -5,15 +5,15 @@ import javax.validation.constraints.NotEmpty;
 import br.com.evilasionetodev.maidabank.models.User;
 
 public class UserForm {
-
-	@NotEmpty
-	private String name;
 	
 	@NotEmpty
 	private String email;
 	
 	@NotEmpty
 	private String password;
+	
+	@NotEmpty
+	private String name;
 
 	public String getName() {
 		return name;

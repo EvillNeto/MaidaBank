@@ -48,12 +48,12 @@ public class Acount {
 		return balance;
 	}
 
-	public void addBalance(Double transfer) {
-		balance = balance.add(BigDecimal.valueOf(transfer));
+	public void addBalance(BigDecimal transfer) {
+		balance = balance.add(transfer);
 	}
 	
-	public void subBalance(Double transfer) {
-		balance = balance.subtract(BigDecimal.valueOf(transfer));
+	public void subBalance(BigDecimal transfer) {
+		balance = balance.subtract(transfer);
 	}
 	
 	public User getUser() {

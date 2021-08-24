@@ -23,7 +23,7 @@ public class User {
 	private String password;
 	
 	@OneToMany(mappedBy= "user")
-	private List<Acount> acounts = new ArrayList<>();
+	private List<Account> accounts = new ArrayList<>();
 	
 	public User() {
 	}
@@ -39,12 +39,12 @@ public class User {
 		return id;
 	}
 	
-	public List<Acount> getAcounts(){
-		return acounts;
+	public List<Account> getAcounts(){
+		return accounts;
 	}
 	
-	public void addAcount(Acount acount) {
-		acounts.add(acount);
+	public void addAcount(Account account) {
+		accounts.add(account);
 	}
 
 	public String getName() {

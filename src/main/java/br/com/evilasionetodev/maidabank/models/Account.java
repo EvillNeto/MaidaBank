@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Acount {
+public class Account {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,10 @@ public class Acount {
 	@ManyToOne
 	private User user;
 
-	public Acount() {
+	public Account() {
 	}
 	
-	public Acount(String number, BigDecimal balance,User user) {
+	public Account(String number, BigDecimal balance,User user) {
 		super();
 		this.number = number;
 		this.balance = balance;
@@ -80,7 +80,7 @@ public class Acount {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Acount other = (Acount) obj;
+		Account other = (Account) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

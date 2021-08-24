@@ -26,7 +26,7 @@ public class UserController {
 	
 	@PostMapping
 	@Transactional
-	public ResponseEntity<UserDto> registeruser(@RequestBody @Valid UserForm form, UriComponentsBuilder uriBuilder){
+	public ResponseEntity<UserDto> registerUser(@RequestBody @Valid UserForm form, UriComponentsBuilder uriBuilder){
 		service.saveUser(form);
 		URI uri = uriBuilder.path("/users").build().toUri();
 		return ResponseEntity.created(uri).body(new UserDto(form));

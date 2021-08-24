@@ -2,18 +2,18 @@ package br.com.evilasionetodev.maidabank.controllers.forms;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
-import br.com.evilasionetodev.maidabank.models.Acount;
+import br.com.evilasionetodev.maidabank.models.Account;
 import br.com.evilasionetodev.maidabank.models.User;
 
-public class AcountForm {
+public class AccountForm {
 
 	@NotEmpty
 	private String number;
 	
-	@NotNull
+	@Min(value=0,message="O balanço inicial não pode ser negativo")
 	private BigDecimal balance;
 
 	public String getNumber() {
@@ -32,8 +32,8 @@ public class AcountForm {
 		this.balance = balance;
 	}
 	
-	public Acount converter(User user) {
-		Acount acount = new Acount(number, balance, user);
-		return acount;
+	public Account converter(User user) {
+		Account account = new Account(number, balance, user);
+		return account;
 	}
 }

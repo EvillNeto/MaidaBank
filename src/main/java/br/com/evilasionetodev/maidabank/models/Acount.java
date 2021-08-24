@@ -22,6 +22,9 @@ public class Acount {
 	@ManyToOne
 	private User user;
 
+	public Acount() {
+	}
+	
 	public Acount(String number, BigDecimal balance,User user) {
 		super();
 		this.number = number;

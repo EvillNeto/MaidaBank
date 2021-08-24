@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class User {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -22,9 +22,12 @@ public class User {
 
 	private String password;
 	
-	@OneToMany(mappedBy= "order")
+	@OneToMany(mappedBy= "user")
 	private List<Acount> acounts = new ArrayList<>();
-
+	
+	public User() {
+	}
+	
 	public User(String name, String email, String password) {
 		super();
 		this.name = name;

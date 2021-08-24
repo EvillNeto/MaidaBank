@@ -22,7 +22,7 @@ public class User {
 
 	private String password;
 	
-	@OneToMany(mappedBy= "user")
+	@OneToMany(mappedBy= "order")
 	private List<Acount> acounts = new ArrayList<>();
 
 	public User(String name, String email, String password) {

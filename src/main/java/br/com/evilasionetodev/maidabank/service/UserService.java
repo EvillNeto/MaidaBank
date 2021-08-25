@@ -9,6 +9,7 @@ import br.com.evilasionetodev.maidabank.controllers.forms.UserForm;
 import br.com.evilasionetodev.maidabank.models.User;
 import br.com.evilasionetodev.maidabank.repositories.UserRepository;
 import br.com.evilasionetodev.maidabank.service.exceptions.AlreadyExistsException;
+import br.com.evilasionetodev.maidabank.service.exceptions.NotFoundException;
 
 @Service
 public class UserService {
@@ -22,9 +23,17 @@ public class UserService {
 	}
 	
 	public void checkEmail(String email) {
-		Optional<User> op = repository.findByEmail(email.toLowerCase());
+		Optional<User> op = repository.findByEmail(email);
 		if(op.isPresent()) {
 			throw new AlreadyExistsException("Email:" + email + " já foi registrado");
 		}
+	}
+	
+	public User findByEmail(String email) {
+		Optional<User> op = repository.findByEmail(email);
+		if(op.isEmpty()) {
+			throw new NotFoundException("Email incorreto");
+		}
+		return op.get();
 	}
 }

@@ -2,13 +2,13 @@ package br.com.evilasionetodev.maidabank.controllers;
 
 import java.net.URI;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +21,7 @@ import br.com.evilasionetodev.maidabank.controllers.forms.AccountForm;
 import br.com.evilasionetodev.maidabank.controllers.forms.BalanceForm;
 import br.com.evilasionetodev.maidabank.controllers.forms.TransferForm;
 import br.com.evilasionetodev.maidabank.models.Account;
+import br.com.evilasionetodev.maidabank.security.TokenService;
 import br.com.evilasionetodev.maidabank.service.AccountService;
 
 @Controller
@@ -30,26 +31,31 @@ public class AccountController {
 	@Autowired
 	private AccountService service;
 	
-	@PostMapping(value="/{id}")
+	@Autowired
+	private TokenService tokenService;
+	
+	@PostMapping
 	@Transactional
-	public ResponseEntity<AccountDto> registerAccount(@RequestBody @Valid AccountForm form, @PathVariable Long id, UriComponentsBuilder uriBuilder){
-		service.saveAccount(id, form);
+	public ResponseEntity<AccountDto> registerAccount(@RequestBody @Valid AccountForm form, UriComponentsBuilder uriBuilder, HttpServletRequest request){
+		String token = tokenService.retrieveToken(request);
+		service.saveAccount(tokenService.getIdUser(token), form);
 		URI uri = uriBuilder.path("/accounts").build().toUri();
-		return ResponseEntity.created(uri).body(new AccountDto(service.getUserAccount(id, form.getNumber())));
+		return ResponseEntity.created(uri).body(new AccountDto(service.getUserAccount(tokenService.getIdUser(token), form.getNumber())));
 	}
 	
-	@PostMapping(value="/{id}/transfer")
+	@PostMapping(value="/transfer")
 	@Transactional
-	public ResponseEntity<TransferDto> trnsfer(@RequestBody @Valid TransferForm form, @PathVariable Long id, UriComponentsBuilder uriBuilder){
-		service.transfer(id, form);
+	public ResponseEntity<TransferDto> transfer(@RequestBody @Valid TransferForm form, UriComponentsBuilder uriBuilder, HttpServletRequest request){
+		String token = tokenService.retrieveToken(request);
+		service.transfer(tokenService.getIdUser(token), form);
 		URI uri = uriBuilder.path("/accounts").build().toUri();
-		return ResponseEntity.created(uri).body(new TransferDto(form, service.getUserAccount(id, form.getSource_account_number()).getUser()));
+		return ResponseEntity.created(uri).body(new TransferDto(form, service.getUserAccount(tokenService.getIdUser(token), form.getSource_account_number()).getUser()));
 	}
 	
-	@PostMapping(value="/{id}/balance")
-	@Transactional
-	public ResponseEntity<BalanceDto> trnsfer(@RequestBody @Valid BalanceForm form, @PathVariable Long id, UriComponentsBuilder uriBuilder){
-		Account ac = service.getUserAccount(id, form.getAccount_number());
+	@PostMapping(value="/balance")
+	public ResponseEntity<BalanceDto> balance(@RequestBody @Valid BalanceForm form, UriComponentsBuilder uriBuilder, HttpServletRequest request){
+		String token = tokenService.retrieveToken(request);
+		Account ac = service.getUserAccount(tokenService.getIdUser(token), form.getAccount_number());
 		URI uri = uriBuilder.path("/accounts").build().toUri();
 		return ResponseEntity.created(uri).body(new BalanceDto(ac));
 	}

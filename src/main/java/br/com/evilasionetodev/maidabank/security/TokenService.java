@@ -15,9 +15,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class TokenService {
 	
-	private String secret ="^m\\WG].lx{w0oP}bJ'cgM9FjS\\qI%a%WH[)WKLh3{#mxY2pk9$9T^XPm^}1J3YfM+6qr^z}\\Bzc.lu/3$]h5$lKpt+yoJjsdA.*1X7b0JdPz#NcGoqh4e#4wWQj<o>DEPITgW@*WAHzBadO!&9MSF)\r\n"
-			+ "";
-
+	private String secret ="+&lgRn4f8!Pkr*LVI7]h]Rvfa(2M*HRXgZJgNu$7XD$v\\SQy+Fc7cHPF>GTmR.2/Cs[y$L&3&dr(U@(z-}FiFd#%!h9OdynzM+J+HY#t/>BkDg{#qr1mP)K.jme/LCO[vET77lq!O-*)g<(eUF1aaD";
+	
 	public String generateToken(Authentication authentication) {
 		User loged = (User) authentication.getPrincipal();
 		Date now = new Date();

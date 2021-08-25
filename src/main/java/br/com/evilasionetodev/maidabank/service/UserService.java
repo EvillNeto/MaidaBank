@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.evilasionetodev.maidabank.controllers.forms.UserForm;
 import br.com.evilasionetodev.maidabank.models.User;
+import br.com.evilasionetodev.maidabank.repositories.RoleRepository;
 import br.com.evilasionetodev.maidabank.repositories.UserRepository;
 import br.com.evilasionetodev.maidabank.service.exceptions.AlreadyExistsException;
 import br.com.evilasionetodev.maidabank.service.exceptions.NotFoundException;
@@ -15,11 +16,16 @@ import br.com.evilasionetodev.maidabank.service.exceptions.NotFoundException;
 public class UserService {
 
 	@Autowired
+	private RoleRepository roleRepository;
+	
+	@Autowired
 	private UserRepository repository;
 	
 	public void saveUser(UserForm form) {
 		checkEmail(form.getEmail());
-		repository.save(form.converter());
+		User user = form.converter();
+		user.addRoles(roleRepository.findByRole("ROLE_USER").get());
+		repository.save(user);
 	}
 	
 	public void checkEmail(String email) {

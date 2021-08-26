@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import br.com.evilasionetodev.maidabank.models.Account;
 import br.com.evilasionetodev.maidabank.models.User;
@@ -13,6 +14,7 @@ public class AccountForm {
 	@NotEmpty
 	private String number;
 	
+	@NotNull
 	@Min(value=0,message="O balanço inicial não pode ser negativo")
 	private BigDecimal balance;
 

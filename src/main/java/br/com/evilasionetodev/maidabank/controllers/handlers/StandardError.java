@@ -1,4 +1,4 @@
-package br.com.evilasionetodev.maidabank.controllers.exceptions;
+package br.com.evilasionetodev.maidabank.controllers.handlers;
 
 import java.io.Serializable;
 import java.time.Instant;

@@ -43,11 +43,11 @@ public class TransferDto {
 		this.destination_account_number = destination_account_number;
 	}
 
-	public UserDto getUser() {
+	public UserDto getUser_tranfer() {
 		return user_transfer;
 	}
 
-	public void setUser(UserDto user) {
+	public void setUser_tranfer(UserDto user) {
 		this.user_transfer = user;
 	}
 }

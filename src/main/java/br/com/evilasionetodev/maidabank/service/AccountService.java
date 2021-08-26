@@ -11,9 +11,10 @@ import br.com.evilasionetodev.maidabank.models.Account;
 import br.com.evilasionetodev.maidabank.models.User;
 import br.com.evilasionetodev.maidabank.repositories.AccountRepository;
 import br.com.evilasionetodev.maidabank.repositories.UserRepository;
-import br.com.evilasionetodev.maidabank.service.exceptions.AlreadyExistsException;
+import br.com.evilasionetodev.maidabank.service.exceptions.BadRequestException;
 import br.com.evilasionetodev.maidabank.service.exceptions.ForbiddenException;
 import br.com.evilasionetodev.maidabank.service.exceptions.NotFoundException;
+import br.com.evilasionetodev.maidabank.service.exceptions.UnauthorizedException;
 
 @Service
 public class AccountService {
@@ -24,17 +25,18 @@ public class AccountService {
 	@Autowired
 	private AccountRepository aRepository;
 	
-	public void saveAccount(Long userId, AccountForm form) {
+	public Account saveAccount(Long userId, AccountForm form) {
 		checkAccount(form.getNumber());
-		User user = uRepository.findById(userId).get();
-		aRepository.save(form.converter(user));
+		Account ac = form.converter(getUser(userId));
+		aRepository.save(ac);
+		return ac;
 	}
 	
 	public void transfer(Long userId, TransferForm form) {
 		Account source =  getUserAccount(userId, form.getSource_account_number());
 		Account destination = getAccount(form.getDestination_account_number());
 		if(source.getBalance().doubleValue() < form.getAmount().doubleValue()) {
-			throw new ForbiddenException("Saldo insuficiente");
+			throw new ForbiddenException("Saldo insuficiente na conta de origem");
 		}
 		source.subBalance(form.getAmount());
 		destination.addBalance(form.getAmount());
@@ -42,10 +44,18 @@ public class AccountService {
 		aRepository.save(destination);
 	}
 	
+	public User getUser(Long userId) {
+		Optional<User> op = uRepository.findById(userId);
+		if(op.isEmpty()) {
+			throw new UnauthorizedException("Acesso Negado");
+		}
+		return op.get();
+	}
+	
 	public Account getAccount(String number) {
 		Optional<Account> op = aRepository.findByNumber(number);
 		if(op.isEmpty()) {
-			throw new NotFoundException("Conta numero: "+ number +" não encontrada");
+			throw new NotFoundException("Conta destino não encontada");
 		}
 		return op.get();
 	}
@@ -53,7 +63,7 @@ public class AccountService {
 	public Account getUserAccount(Long userId, String number) {
 		Optional<Account> op = aRepository.findByNumberAndUserId(number,userId);
 		if(op.isEmpty()) {
-			throw new NotFoundException("Conta numero: "+ number +" não encontrada");
+			throw new NotFoundException("Conta de origem não encontrada para o usuário informado");
 		}
 		return op.get();
 	}
@@ -61,7 +71,7 @@ public class AccountService {
 	public void checkAccount(String number) {
 		Optional<Account> op = aRepository.findByNumber(number);
 		if(op.isPresent()) {
-			throw new AlreadyExistsException("ja existe uma conta com esse número");
+			throw new BadRequestException("ja existe uma conta com esse número");
 		}
 	}
 }

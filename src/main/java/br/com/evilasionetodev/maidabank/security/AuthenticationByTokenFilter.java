@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.evilasionetodev.maidabank.models.User;
 import br.com.evilasionetodev.maidabank.repositories.UserRepository;
+import br.com.evilasionetodev.maidabank.service.exceptions.UnauthorizedException;
 
 
 public class AuthenticationByTokenFilter extends OncePerRequestFilter{
@@ -32,7 +33,6 @@ public class AuthenticationByTokenFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 		
 		String token = tokenService.retrieveToken(request);
-		System.out.println(token);
 		boolean valid = tokenService.isTokenValid(token);
 		if (valid) {
 			authenticateUser(token);
@@ -43,6 +43,9 @@ public class AuthenticationByTokenFilter extends OncePerRequestFilter{
 
 	private void authenticateUser(String token) {
 		Long idUser = tokenService.getIdUser(token);
+		if(repository.findById(idUser).isEmpty()) {
+			throw new UnauthorizedException("Acesso negado");
+		}
 		User user = repository.findById(idUser).get();
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());		
 		SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -38,9 +38,9 @@ public class AccountController {
 	@Transactional
 	public ResponseEntity<AccountDto> registerAccount(@RequestBody @Valid AccountForm form, UriComponentsBuilder uriBuilder, HttpServletRequest request){
 		String token = tokenService.retrieveToken(request);
-		service.saveAccount(tokenService.getIdUser(token), form);
+		Account ac = service.saveAccount(tokenService.getIdUser(token), form);
 		URI uri = uriBuilder.path("/accounts").build().toUri();
-		return ResponseEntity.created(uri).body(new AccountDto(service.getUserAccount(tokenService.getIdUser(token), form.getNumber())));
+		return ResponseEntity.created(uri).body(new AccountDto(ac));
 	}
 	
 	@PostMapping(value="/transfer")
